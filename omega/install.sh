@@ -160,7 +160,21 @@ configureWallet() {
     $COINCLI stop > /dev/null 2>&1
     sleep 10
 
-    echo -e "rpcuser=${rpcuser}\nrpcpassword=${rpcpass}\nrpcport=${COINRPCPORT}\nrpcallowip=127.0.0.1\nrpcthreads=8\nlisten=1\nserver=1\ndaemon=1\nstaking=0\ndiscover=1\nexternalip=${mnip}:${COINPORT}\nmasternode=1\nmasternodeprivkey=${mnkey}" > ~/$COINCORE/$COINCONFIG
+    echo -e '
+    rpcuser=${rpcuser}
+    rpcpassword=${rpcpass}
+    rpcport=${COINRPCPORT}
+    rpcallowip=127.0.0.1
+    rpcthreads=8
+    listen=1
+    server=1
+    daemon=1
+    staking=0
+    discover=1
+    externalip=${mnip}:${COINPORT}
+    masternode=1
+    masternodeprivkey=${mnkey}
+    ' >> ~/$COINCORE/$COINCONFIG
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 

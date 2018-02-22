@@ -166,23 +166,10 @@ configureWallet() {
     mnip=$(curl --silent ipinfo.io/ip)
     rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
-    mnkey=$($COINCLI masternode genkey)
+    mnkey=$($COINCLI smartnode genkey)
 
     $COINCLI stop > /dev/null 2>&1
     sleep 10
-
-    rpcuser=${_rpcUserName}
-    rpcpassword=${_rpcPassword}
-    rpcallowip=127.0.0.1
-    listen=1
-    server=1
-    daemon=1
-    logtimestamps=1
-    maxconnections=64
-    txindex=1
-    smartnode=1
-    externalip=${_nodeIpAddress}:9678
-    smartnodeprivkey=${_nodePrivateKey}
 
     echo -e "
     rpcuser=${rpcuser}
@@ -275,9 +262,9 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     syncWallet
 
     echo
-    echo -e "${BOLD}The VPS side of your masternode has been installed. Use the following line in your cold wallet masternode.conf and replace the tx and index${NONE}".
+    echo -e "${BOLD}The VPS side of your smartnode has been installed. Use the following line in your cold wallet smartnode.conf and replace the tx and index${NONE}".
     echo
-    echo -e "${CYAN}masternode1 ${mnip}:${COINPORT} ${mnkey} tx index${NONE}"
+    echo -e "${CYAN}smartnode1 ${mnip}:${COINPORT} ${mnkey} tx index${NONE}"
     echo
     echo -e "${BOLD}Continue with the cold wallet part of the guide${NONE}"
     echo

@@ -142,7 +142,7 @@ downloadWallet() {
 installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
-    cd && cd $COINSRC
+    cd && cd $COINSRC/src
     strip $COINDAEMON
     chmod +x $COINDAEMON
     sudo mv $COINDAEMON /usr/local/bin

@@ -109,16 +109,9 @@ installDependencies() {
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 
-compileWallet() {
+downloadWallet() {
     echo
-    echo -e "[7/${MAX}] Compiling wallet. Please wait..."
-
-    # Download and compile from source via git
-    # git clone $COINGITHUB $COINSRC > /dev/null 2>&1
-    # cd $COINSRC
-    # ./autogen.sh > /dev/null 2>&1
-    # ./configure > /dev/null 2>&1
-    # make > /dev/null 2>&1
+    echo -e "[7/${MAX}] Downloading wallet. Please wait..."
 
     # Download and install precompiled binaries
     mkdir -p $COINSRC && cd $COINSRC
@@ -126,6 +119,20 @@ compileWallet() {
     tar -xf *.tar.gz > /dev/null 2>&1
     cd $COINBINPATH
     mv $COINDAEMON $COINCLI $COINTX $COINSRC > /dev/null 2>&1
+
+    echo -e "${NONE}${GREEN}* Done${NONE}";
+}
+
+compileWallet() {
+    echo
+    echo -e "[7/${MAX}] Compiling wallet. Please wait..."
+
+    # Download and compile from source via git
+    git clone $COINGITHUB $COINSRC > /dev/null 2>&1
+    cd $COINSRC
+    ./autogen.sh > /dev/null 2>&1
+    ./configure > /dev/null 2>&1
+    make > /dev/null 2>&1
 
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
@@ -243,7 +250,8 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     installFail2Ban
     installFirewall
     installDependencies
-    compileWallet
+    downloadWallet
+    # compileWallet
     installWallet
     configureWallet
     installSentinel

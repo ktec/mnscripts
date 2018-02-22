@@ -145,9 +145,9 @@ installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
     cd && cd $COINSRC/src
-    strip $COINDAEMON
-    chmod +x $COINDAEMON
-    sudo mv $COINDAEMON /usr/local/bin
+    strip $COINDAEMON $COINCLI $COINTX
+    chmod +x $COINDAEMON $COINCLI $COINTX
+    sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd

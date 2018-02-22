@@ -10,10 +10,10 @@ BOLD='\033[1m'
 UNDERLINE='\033[4m'
 MAX=12
 
-NAME=SmartCoin
-USER=smart
-COINSRC=~/src/smartcoin
-COINGITHUB=https://github.com/psionin/smartcoin.git
+NAME=SmartCash
+USER=smartcash
+COINSRC=~/src/smartcash
+COINGITHUB=https://github.com/SmartCash/smartcash.git
 COINDOWNLOAD=# no release available
 COINBINPATH=# no release available
 SENTINELGITHUB=https://github.com/omegacoinnetwork/sentinel.git
@@ -22,8 +22,8 @@ COINRPCPORT=22812
 COINDAEMON=smartcoind
 COINCLI=smartcoin-cli
 COINTX=smartcoin-tx
-COINCORE=.smartcoin
-COINCONFIG=smartcoin.conf
+COINCORE=.smartcash
+COINCONFIG=smartcash.conf
 
 
 # Functions

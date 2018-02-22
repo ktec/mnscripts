@@ -17,8 +17,8 @@ COINGITHUB=https://github.com/SmartCash/smartcash.git
 COINDOWNLOAD=# no release available
 COINBINPATH=# no release available
 SENTINELGITHUB=https://github.com/dashpay/sentinel.git
-COINPORT=22813
-COINRPCPORT=22812
+COINPORT=9678
+COINRPCPORT=14855
 COINDAEMON=smartcoind
 COINCLI=smartcoin-cli
 COINTX=smartcoin-tx
@@ -171,6 +171,19 @@ configureWallet() {
     $COINCLI stop > /dev/null 2>&1
     sleep 10
 
+    rpcuser=${_rpcUserName}
+    rpcpassword=${_rpcPassword}
+    rpcallowip=127.0.0.1
+    listen=1
+    server=1
+    daemon=1
+    logtimestamps=1
+    maxconnections=64
+    txindex=1
+    smartnode=1
+    externalip=${_nodeIpAddress}:9678
+    smartnodeprivkey=${_nodePrivateKey}
+
     echo -e "
     rpcuser=${rpcuser}
     rpcpassword=${rpcpass}
@@ -180,11 +193,11 @@ configureWallet() {
     listen=1
     server=1
     daemon=1
-    staking=0
-    discover=1
+    maxconnections=64
+    txindex=1
+    smartnode=1
     externalip=${mnip}:${COINPORT}
-    masternode=1
-    masternodeprivkey=${mnkey}
+    smartnodeprivkey=${mnkey}
     " | sed "s/^[ \t]*//" | sed '/^$/d' > ~/$COINCORE/$COINCONFIG
     # Using sed to remove leading whitespace and blank lines
 

@@ -54,11 +54,11 @@ setupSwap() {
 
     if [[ ("$add_swap" == "y" || "$add_swap" == "Y" || "$add_swap" == "") ]]; then
         echo && echo -e "${NONE}[3/${MAX}] Adding swap space...${YELLOW}"
-        sudo fallocate -l $swap_size /swapfile
+        sudo fallocate -l $swap_size /swapfile > /dev/null 2>&1
         sleep 2
-        sudo chmod 600 /swapfile
-        sudo mkswap /swapfile
-        sudo swapon /swapfile
+        sudo chmod 600 /swapfile > /dev/null 2>&1
+        sudo mkswap /swapfile > /dev/null 2>&1
+        sudo swapon /swapfile > /dev/null 2>&1
         echo -e "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab > /dev/null 2>&1
         sudo sysctl vm.swappiness=10
         sudo sysctl vm.vfs_cache_pressure=50
@@ -140,7 +140,7 @@ installWallet() {
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd
-    wget https://raw.githubusercontent.com/ktec/mnscripts/master/omega/utilities.sh
+    wget https://raw.githubusercontent.com/ktec/mnscripts/master/omega/utilities.sh > /dev/null 2>&1
     chmod 755 utilities.sh
     sudo mv utilities.sh /usr/local/bin
     echo -e "${NONE}${GREEN}* Done${NONE}";

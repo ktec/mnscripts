@@ -191,7 +191,7 @@ installSentinel() {
     crontab mycron > /dev/null 2>&1
     rm mycron > /dev/null 2>&1
     CONFLOCATION=$(cd ~/$COINCORE && pwd)
-    rpl dash_conf=/home/YOURUSERNAME/$COINCORE/$COINCONFIG dash_conf=$CONFLOCATION/$COINCONFIG sentinel.conf
+    rpl dash_conf=/home/YOURUSERNAME/$COINCORE/$COINCONFIG dash_conf=$CONFLOCATION/$COINCONFIG sentinel.conf > /dev/null 2>&1
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 

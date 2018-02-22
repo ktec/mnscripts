@@ -174,9 +174,8 @@ configureWallet() {
     externalip=${mnip}:${COINPORT}
     masternode=1
     masternodeprivkey=${mnkey}
-    " > ~/$COINCORE/$COINCONFIG
-    # Remove leading whitespace
-    sed "s/^[ \t]*//" -i ~/$COINCORE/$COINCONFIG
+    " | sed "s/^[ \t]*//" | sed '/^$/d' > ~/$COINCORE/$COINCONFIG
+    # Using sed to remove leading whitespace and blank lines
 
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }

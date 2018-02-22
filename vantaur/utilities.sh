@@ -11,23 +11,23 @@ UNDERLINE='\033[4m'
 MAX=10
 
 ShowWalletInfo() {
-    omegacoin-cli getinfo;
+    vantaurd getinfo;
 }
 
 ShowWalletSyncStatus() {
-   omegacoin-cli mnsync status
+   vantaurd mnsync status
 }
 
 MasternodeStatus() {
-    omegacoin-cli masternode status
+    vantaurd masternode status
 }
 
 ReindexWallet() {
     echo 'Shuting down wallet daemon...'
-    omegacoin-cli stop > /dev/null 2>&1
+    vantaurd stop > /dev/null 2>&1
     sleep 10
     echo -e "${GREEN}* Done${NONE}";
-    cd ~/.omegacoincore
+    cd ~/.Vantaur
     sudo rm governance.dat > /dev/null 2>&1
     sudo rm netfulfilled.dat > /dev/null 2>&1
     sudo rm peers.dat > /dev/null 2>&1
@@ -43,18 +43,18 @@ ReindexWallet() {
     sleep 5
     echo -e "${GREEN}* Done${NONE}";
     echo 'Waiting for wallet to sync. It will take a while, you can go grab a coffee :)'
-    until omegacoin-cli mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until vantaurd mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Blockchain Synced${NONE}";
-    until omegacoin-cli mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until vantaurd mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Masternode List Synced${NONE}";
-    until omegacoin-cli mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until vantaurd mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Winners List Synced${NONE}";
-    until omegacoin-cli mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until vantaurd mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Done reindexing wallet${NONE}";
 }
 
 EditWalletConfig() {
-    sudo nano ~/.omegacoincore/omegacoin.conf
+    sudo nano ~/.Vantaur/Vantaur.conf
 }
 
 ViewSentinelLogFile() {
@@ -67,12 +67,12 @@ StartWalletDaemon() {
 }
 
 StopWalletDaemon() {
-    omegacoin-cli stop
+    vantaurd stop
     sleep 5
 }
 
 echo -e "------------------------------------"
-echo -e "| ${CYAN}OmegaCoin masternode utilities${NONE} |"
+echo -e "| ${CYAN}Vantaur masternode utilities${NONE} |"
 echo -e "------------------------------------"
 echo
 echo -e "${CYAN}[1]${NONE} Show wallet info"

@@ -1,15 +1,15 @@
 #bin/sh
 omegacoin-cli stop
 
-cd && mkdir src && cd src
+cd /usr/bin
+sudo rm -rf omegacoind omegacoin-cli omegacoin-tx
+
+cd && mkdir new && cd new
 
 wget https://github.com/omegacoinnetwork/omegacoin/releases/download/0.12.5/omegacoincore-0.12.5-linux64.tar.gz
 tar -xf omegacoincore-0.12.5-linux64.tar.gz
 
-cd /usr/local/bin
-sudo rm -rf omegacoind omegacoin-cli omegacoin-tx
-
-cd ~/src
+cd ~/new/omegacoincore-0.12.2/bin
 strip omegacoind
 strip omegacoin-cli
 strip omegacoin-tx

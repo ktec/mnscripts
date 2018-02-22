@@ -119,7 +119,7 @@ compileWallet() {
 
     # Download and compile from source via git
     git clone $COINGITHUB $COINSRC > /dev/null 2>&1
-    cd $COINSRC/src
+    cd $COINSRC
     ./autogen.sh > /dev/null 2>&1
     ./configure > /dev/null 2>&1
     make > /dev/null 2>&1

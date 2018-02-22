@@ -60,8 +60,8 @@ setupSwap() {
         sudo mkswap /swapfile > /dev/null 2>&1
         sudo swapon /swapfile > /dev/null 2>&1
         echo -e "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab > /dev/null 2>&1
-        sudo sysctl vm.swappiness=10
-        sudo sysctl vm.vfs_cache_pressure=50
+        sudo sysctl vm.swappiness=10 > /dev/null 2>&1
+        sudo sysctl vm.vfs_cache_pressure=50 > /dev/null 2>&1
         echo -e "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf > /dev/null 2>&1
         echo -e "vm.vfs_cache_pressure=50" | sudo tee -a /etc/sysctl.conf > /dev/null 2>&1
         echo -e "${NONE}${GREEN}* Done${NONE}";
@@ -175,6 +175,9 @@ configureWallet() {
     masternode=1
     masternodeprivkey=${mnkey}
     " > ~/$COINCORE/$COINCONFIG
+    # Remove leading whitespace
+    sed "s/^[ \t]*//" -i ~/$COINCORE/$COINCONFIG
+
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 

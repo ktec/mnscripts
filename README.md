@@ -4,9 +4,7 @@
 Example:
 
 ```
-adduser omega
-usermod -aG sudo omega
-su - omega
+adduser omega && usermod -aG sudo omega && su - omega
 ```
 
 

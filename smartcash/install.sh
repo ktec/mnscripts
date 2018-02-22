@@ -16,7 +16,7 @@ COINSRC=~/src/smartcash
 COINGITHUB=https://github.com/SmartCash/smartcash.git
 COINDOWNLOAD=# no release available
 COINBINPATH=# no release available
-SENTINELGITHUB=https://github.com/omegacoinnetwork/sentinel.git
+SENTINELGITHUB=https://github.com/dashpay/sentinel.git
 COINPORT=22813
 COINRPCPORT=22812
 COINDAEMON=smartcoind
@@ -257,7 +257,7 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     compileWallet
     installWallet
     configureWallet
-    installSentinel
+    # installSentinel
     startWallet
     syncWallet
 

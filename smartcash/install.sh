@@ -19,9 +19,9 @@ COINBINPATH=# no release available
 SENTINELGITHUB=https://github.com/dashpay/sentinel.git
 COINPORT=9678
 COINRPCPORT=14855
-COINDAEMON=smartcoind
-COINCLI=smartcoin-cli
-COINTX=smartcoin-tx
+COINDAEMON=smartcashd
+COINCLI=smartcash-cli
+COINTX=smartcash-tx
 COINCORE=.smartcash
 COINCONFIG=smartcash.conf
 

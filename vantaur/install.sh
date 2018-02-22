@@ -134,7 +134,7 @@ downloadWallet() {
   wget $COINDOWNLOAD > /dev/null 2>&1
   tar -xf *.tar.gz > /dev/null 2>&1
   cd $COINBINPATH
-  mv $COINDAEMON $COINCLI $COINTX $COINSRC > /dev/null 2>&1
+  mv $COINDAEMON $COINSRC > /dev/null 2>&1
 
   echo -e "${NONE}${GREEN}* Done${NONE}";
 }

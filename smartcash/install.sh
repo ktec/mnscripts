@@ -227,6 +227,27 @@ startWallet() {
     echo -e "${GREEN}* Done${NONE}";
 }
 
+downloadBlockchain() {
+    echo
+    echo -e "${BOLD}"
+    read -e -p "Download blockchain? (Recommended if you dont want to wait) [Y/n] :" download_blockchain
+    if [[ ("$download_blockchain" == "y" || "$download_blockchain" == "Y" || "$download_blockchain" == "") ]]; then
+        echo -e "[11.1/${MAX}] Downloading blockchain wallet. Please wait..."
+        $COINCLI stop > /dev/null 2>&1
+        sleep 10
+        cd && cd /tmp
+        wget http://proteanx.com/txindexstrap.zip
+        unzip -o txindexstrap.zip -d ~/$COINCORE
+        chmod -R 700 ~/$COINCORE
+        $COINDAEMON -daemon -reindex > /dev/null 2>&1
+        sleep 10
+        echo -e "${NONE}${GREEN}* Done${NONE}";
+    else
+        echo -e "${NONE}[11.1/${MAX}] Syncing blockchain manually."
+    fi
+}
+
+
 syncWallet() {
     echo
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"

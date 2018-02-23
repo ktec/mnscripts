@@ -219,7 +219,7 @@ startWallet() {
     sudo rm mncache.dat > /dev/null 2>&1
     sudo rm -r chainstate > /dev/null 2>&1
     sudo rm fee_estimates.dat > /dev/null 2>&1
-    sudo rm mnpayments.dat > /dev/null 2>&1
+    sudo rm snpayments.dat > /dev/null 2>&1
     sudo rm banlist.dat > /dev/null 2>&1
     cd
     $COINDAEMON -daemon > /dev/null 2>&1
@@ -250,13 +250,13 @@ downloadBlockchain() {
 syncWallet() {
     echo
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
-    until $COINCLI mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until $COINCLI snsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Blockchain Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until $COINCLI snsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Masternode List Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until $COINCLI snsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Winners List Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    until $COINCLI snsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}* Done reindexing wallet${NONE}";
 }
 

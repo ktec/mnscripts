@@ -235,11 +235,10 @@ downloadBlockchain() {
         echo -e "[11.1/${MAX}] Downloading blockchain wallet. Please wait..."
         $COINCLI stop > /dev/null 2>&1
         sleep 10
-        cd && cd /tmp
-        wget http://proteanx.com/txindexstrap.zip
-        unzip -o txindexstrap.zip -d ~/$COINCORE
+        wget http://proteanx.com/txindexstrap.zip -P /tmp
+        unzip -o /tmp/txindexstrap.zip -d ~/$COINCORE
         chmod -R 700 ~/$COINCORE
-        $COINDAEMON -daemon -reindex > /dev/null 2>&1
+        $COINDAEMON -daemon > /dev/null 2>&1
         sleep 10
         echo -e "${NONE}${GREEN}* Done${NONE}";
     else

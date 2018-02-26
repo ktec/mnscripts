@@ -24,7 +24,7 @@ COINCONFIG=numus.conf
 checkForUbuntuVersion() {
    echo "[1/${MAX}] Checking Ubuntu version..."
     if [[ `cat /etc/issue.net`  == *16.04* ]]; then
-        echo -e "${GREEN}* You are running `cat /etc/issue.net` . Setup will continue.${NONE}";
+        echo -e "${GREEN}\xE2\x9C\x94 You are running `cat /etc/issue.net` . Setup will continue.${NONE}";
     else
         echo -e "${RED}* You are not running Ubuntu 16.04.X. You are running `cat /etc/issue.net` ${NONE}";
         echo && echo "Installation cancelled" && echo;
@@ -37,7 +37,7 @@ updateAndUpgrade() {
     echo "[2/${MAX}] Running update and upgrade. Please wait..."
     sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq -y > /dev/null 2>&1
     sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq > /dev/null 2>&1
-    echo -e "${GREEN}* Done${NONE}";
+    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 setupSwap() {
@@ -61,7 +61,7 @@ setupSwap() {
         sudo sysctl vm.vfs_cache_pressure=50 > /dev/null 2>&1
         echo -e "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf > /dev/null 2>&1
         echo -e "vm.vfs_cache_pressure=50" | sudo tee -a /etc/sysctl.conf > /dev/null 2>&1
-        echo -e "${NONE}${GREEN}* Done${NONE}";
+        echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
     fi
 }
 
@@ -71,7 +71,7 @@ installFail2Ban() {
     sudo apt-get -y install fail2ban > /dev/null 2>&1
     sudo systemctl enable fail2ban > /dev/null 2>&1
     sudo systemctl start fail2ban > /dev/null 2>&1
-    echo -e "${NONE}${GREEN}* Done${NONE}";
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 installFirewall() {
@@ -86,7 +86,7 @@ installFirewall() {
     sudo ufw allow $COINRPCPORT/tcp > /dev/null 2>&1
     sudo ufw logging on > /dev/null 2>&1
     echo "y" | sudo ufw enable > /dev/null 2>&1
-    echo -e "${NONE}${GREEN}* Done${NONE}";
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 installDependencies() {
@@ -103,7 +103,7 @@ installDependencies() {
     sudo apt-get install libminiupnpc-dev -qq -y > /dev/null 2>&1
     sudo apt-get install libzmq5 -qq -y > /dev/null 2>&1
     sudo apt-get install virtualenv -qq -y > /dev/null 2>&1
-    echo -e "${NONE}${GREEN}* Done${NONE}";
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 compileWallet() {
@@ -115,7 +115,7 @@ compileWallet() {
     cd $COINSRC/src
     make -f makefile.unix > /dev/null 2>&1
 
-    echo -e "${NONE}${GREEN}* Done${NONE}";
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 installWallet() {
@@ -131,7 +131,7 @@ installWallet() {
     wget https://raw.githubusercontent.com/ktec/mnscripts/master/omega/utilities.sh > /dev/null 2>&1
     chmod 755 utilities.sh
     sudo mv utilities.sh /usr/local/bin
-    echo -e "${NONE}${GREEN}* Done${NONE}";
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 configureWallet() {
@@ -165,7 +165,7 @@ configureWallet() {
     " | sed "s/^[ \t]*//" | sed '/^$/d' > ~/$COINCORE/$COINCONFIG
     # Using sed to remove leading whitespace and blank lines
 
-    echo -e "${NONE}${GREEN}* Done${NONE}";
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 startWallet() {
@@ -184,27 +184,27 @@ startWallet() {
     cd
     $COINDAEMON -daemon > /dev/null 2>&1
     sleep 5
-    echo -e "${GREEN}* Done${NONE}";
+    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 syncWallet() {
     echo
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
     until $COINCLI mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}* Blockchain Synced${NONE}";
+    echo -e "${GREEN}\xE2\x9C\x94 Blockchain Synced${NONE}";
     until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}* Masternode List Synced${NONE}";
+    echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
     until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}* Winners List Synced${NONE}";
+    echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
     until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}* Done reindexing wallet${NONE}";
+    echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
 }
 
 clear
 cd
 
 echo -e "${BOLD}"
-read -p "This script will setup your Numus Coin Masternode. Do you wish to continue? (y/n)?" response
+read -p "This script will setup your Numus Coin Masternode. Do you wish to continue? (y/n)? " response
 echo -e "${NONE}"
 
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then

@@ -137,7 +137,7 @@ compileWallet() {
 installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
-    cd && cd $COINSRC
+    cd && cd $COINSRC/src
     strip $COINDAEMON $COINCLI $COINTX
     chmod +x $COINDAEMON $COINCLI $COINTX
     sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin

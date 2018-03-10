@@ -233,12 +233,12 @@ syncWallet() {
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
     until $COINCLI mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}\xE2\x9C\x94 Blockchain Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
+    # until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    # echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
+    # until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    # echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
+    # until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    # echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
 }
 
 clear

@@ -26,6 +26,7 @@ adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 
 Install wallet:
 ```
+COIN=bulwark
 cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh" && chmod 755 install.sh && bash install.sh
 ```
 

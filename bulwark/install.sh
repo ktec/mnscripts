@@ -184,23 +184,6 @@ configureWallet() {
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
-installSentinel() {
-    echo
-    echo -e "[10/${MAX}] Installing Sentinel...${YELLOW}"
-    cd ~/$COINCORE
-    git clone $SENTINELGITHUB sentinel > /dev/null 2>&1
-    cd sentinel
-    export LC_ALL=C > /dev/null 2>&1
-    virtualenv ./venv > /dev/null 2>&1
-    ./venv/bin/pip install -r requirements.txt > /dev/null 2>&1
-    echo  "* * * * * cd ~/${COINCORE}/sentinel && ./venv/bin/python bin/sentinel.py >> ~/sentinel.log 2>&1" >> mycron
-    crontab mycron > /dev/null 2>&1
-    rm mycron > /dev/null 2>&1
-    CONFLOCATION=$(cd ~/$COINCORE && pwd)
-    rpl dash_conf=/home/YOURUSERNAME/$COINCORE/$COINCONFIG dash_conf=$CONFLOCATION/$COINCONFIG sentinel.conf > /dev/null 2>&1
-    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
-}
-
 startWallet() {
     echo
     echo -e "[11/${MAX}] Starting wallet daemon..."
@@ -251,7 +234,6 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     compileWallet
     installWallet
     configureWallet
-    installSentinel
     startWallet
     syncWallet
 

@@ -153,12 +153,20 @@ installWallet() {
 configureWallet() {
     echo
     echo -e "[9/${MAX}] Configuring wallet. Please wait..."
-    $COINDAEMON -daemon > /dev/null 2>&1
-    sleep 10
+    # $COINDAEMON -daemon > /dev/null 2>&1
+    # sleep 10
 
     mnip=$(curl --silent ipinfo.io/ip)
     rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+
+    # requires us to create a username/password before we can run the daemon
+    mkdir -p ~/$COINCORE/
+    echo -e "rpcuser=${rpcuser}\nrpcpassword=${rpcpass}\n" > ~/$COINCORE/$COINCONFIG
+    # Now we can run the daemon!
+    $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 10
+
     mnkey=$($COINCLI masternode genkey)
 
     $COINCLI stop > /dev/null 2>&1
@@ -183,6 +191,23 @@ configureWallet() {
 
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
+
+configureCrontab() {
+    echo
+    echo -e "[10/${MAX}] Configuring crontab. Please wait..."
+
+    (
+      crontab -l 2>/dev/null
+      echo '@reboot sleep 30 && bulwarkd -daemon -shrinkdebugfile'
+    ) | crontab
+    # (
+    #   crontab -l 2>/dev/null
+    #   echo '@reboot sleep 60 && bulwark-cli startmasternode local false'
+    # ) | crontab
+
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
 
 startWallet() {
     echo
@@ -234,6 +259,7 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     compileWallet
     installWallet
     configureWallet
+    configureCrontab
     startWallet
     syncWallet
 

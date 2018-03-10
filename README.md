@@ -15,6 +15,20 @@ This is work in progress. Pull requests welcome...
 
 ----
 
+## Bulwark
+
+Create user:
+```
+COIN=bulwark
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+adduser $COIN && usermod -aG sudo $COIN && su - $COIN
+```
+
+Install wallet:
+```
+cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh" && chmod 755 install.sh && bash install.sh
+```
+
 ## Numus
 
 Create user:

@@ -18,7 +18,7 @@ COINRPCPORT=28122
 COINDAEMON=numusd
 COINCLI=numusd
 COINTX=numusd
-COINCORE=.numuscore
+COINCORE=.numus
 COINCONFIG=numus.conf
 
 checkForUbuntuVersion() {
@@ -121,14 +121,14 @@ compileWallet() {
 installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
-    cd && cd $COINSRC
-    strip $COINDAEMON $COINCLI $COINTX
-    chmod +x $COINDAEMON $COINCLI $COINTX
-    sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin
+    cd && cd $COINSRC/src
+    strip $COINDAEMON
+    chmod +x $COINDAEMON
+    sudo mv $COINDAEMON /usr/local/bin
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd
-    wget https://raw.githubusercontent.com/ktec/mnscripts/master/omega/utilities.sh > /dev/null 2>&1
+    wget https://raw.githubusercontent.com/ktec/mnscripts/master/numus/utilities.sh > /dev/null 2>&1
     chmod 755 utilities.sh
     sudo mv utilities.sh /usr/local/bin
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
@@ -137,12 +137,20 @@ installWallet() {
 configureWallet() {
     echo
     echo -e "[9/${MAX}] Configuring wallet. Please wait..."
-    $COINDAEMON -daemon > /dev/null 2>&1
-    sleep 10
+    # $COINDAEMON -daemon > /dev/null 2>&1
+    # sleep 10
 
     mnip=$(curl --silent ipinfo.io/ip)
     rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+
+    # Numus requires us to create a username/password before we can run the daemon
+    mkdir -p ~/$COINCORE/
+    echo -e "rpcuser=${rpcuser}\nrpcpassword=${rpcpass}\n" > ~/$COINCORE/$COINCONFIG
+    # Now we can run the daemon!
+    $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 10
+
     mnkey=$($COINCLI masternode genkey)
 
     $COINCLI stop > /dev/null 2>&1

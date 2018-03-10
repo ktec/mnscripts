@@ -13,13 +13,12 @@ MAX=12
 USER=bulwark
 COINSRC=~/src/bulwark
 COINGITHUB=https://github.com/bulwark-crypto/Bulwark.git
-SENTINELGITHUB=https://github.com/bulwarknetwork/sentinel.git
-COINPORT=7777
-COINRPCPORT=7778
+COINPORT=52543
+COINRPCPORT=52544
 COINDAEMON=bulwarkd
 COINCLI=bulwark-cli
 COINTX=bulwark-tx
-COINCORE=.bulwarkcore
+COINCORE=.bulwark
 COINCONFIG=bulwark.conf
 
 checkForUbuntuVersion() {

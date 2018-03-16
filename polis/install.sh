@@ -10,19 +10,17 @@ BOLD='\033[1m'
 UNDERLINE='\033[4m'
 MAX=12
 
-USER=omega
-COINSRC=~/src/omegacoin
-COINGITHUB=https://github.com/omegacoinnetwork/omegacoin.git
-COINDOWNLOAD=https://github.com/omegacoinnetwork/omegacoin/releases/download/0.12.5/omegacoincore-0.12.5-linux64.tar.gz
-COINBINPATH=omegacoincore-0.12.2/bin
-SENTINELGITHUB=https://github.com/omegacoinnetwork/sentinel.git
-COINPORT=7777
-COINRPCPORT=7778
-COINDAEMON=omegacoind
-COINCLI=omegacoin-cli
-COINTX=omegacoin-tx
-COINCORE=.omegacoincore
-COINCONFIG=omegacoin.conf
+USER=polis
+COINSRC=~/src/polis
+COINGITHUB=https://github.com/polispay/polis.git
+SENTINELGITHUB=https://github.com/polispay/sentinel.git
+COINPORT=24126
+COINRPCPORT=24127
+COINDAEMON=polisd
+COINCLI=polis-cli
+COINTX=polis-tx
+COINCORE=.poliscore
+COINCONFIG=polis.conf
 
 checkForUbuntuVersion() {
    echo "[1/${MAX}] Checking Ubuntu version..."
@@ -109,20 +107,6 @@ installDependencies() {
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
-downloadWallet() {
-    echo
-    echo -e "[7/${MAX}] Downloading wallet. Please wait..."
-
-    # Download and install precompiled binaries
-    mkdir -p $COINSRC && cd $COINSRC
-    wget $COINDOWNLOAD > /dev/null 2>&1
-    tar -xf *.tar.gz > /dev/null 2>&1
-    cd $COINBINPATH
-    mv $COINDAEMON $COINCLI $COINTX $COINSRC > /dev/null 2>&1
-
-    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
-}
-
 compileWallet() {
     echo
     echo -e "[7/${MAX}] Compiling wallet. Please wait..."
@@ -140,14 +124,14 @@ compileWallet() {
 installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
-    cd && cd $COINSRC
+    cd && cd $COINSRC/src
     strip $COINDAEMON $COINCLI $COINTX
     chmod +x $COINDAEMON $COINCLI $COINTX
     sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd
-    wget https://raw.githubusercontent.com/ktec/mnscripts/master/omega/utilities.sh > /dev/null 2>&1
+    wget https://raw.githubusercontent.com/ktec/mnscripts/master/polis/utilities.sh > /dev/null 2>&1
     chmod 755 utilities.sh
     sudo mv utilities.sh /usr/local/bin
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
@@ -240,7 +224,7 @@ clear
 cd
 
 echo -e "${BOLD}"
-read -p "This script will setup your Omega Coin Masternode. Do you wish to continue? (y/n)?" response
+read -p "This script will setup your polis Coin Masternode. Do you wish to continue? (y/n)?" response
 echo -e "${NONE}"
 
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
@@ -250,8 +234,7 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     installFail2Ban
     installFirewall
     installDependencies
-    downloadWallet
-    # compileWallet
+    compileWallet
     installWallet
     configureWallet
     installSentinel

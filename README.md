@@ -56,6 +56,21 @@ Install wallet:
 cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/omega/install.sh" && chmod 755 install.sh && bash install.sh
 ```
 
+## Polis
+
+Create user:
+```
+COIN=polis
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+adduser $COIN && usermod -aG sudo $COIN && su - $COIN
+```
+
+Install wallet:
+```
+COIN=polis
+cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh" && chmod 755 install.sh && bash install.sh
+```
+
 ## SmartCash
 
 Create user:

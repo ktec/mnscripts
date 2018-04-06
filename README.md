@@ -27,7 +27,7 @@ adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 Install wallet:
 ```
 COIN=bulwark
-cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh" && chmod 755 install.sh && bash install.sh
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh)
 ```
 
 ## Numus
@@ -40,7 +40,7 @@ adduser numus && usermod -aG sudo numus && su - numus
 
 Install wallet:
 ```
-cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/numus/install.sh" && chmod 755 install.sh && bash install.sh
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/numus/install.sh)
 ```
 
 ## Omega
@@ -53,7 +53,7 @@ adduser omega && usermod -aG sudo omega && su - omega
 
 Install wallet:
 ```
-cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/omega/install.sh" && chmod 755 install.sh && bash install.sh
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/omega/install.sh)
 ```
 
 ## Polis
@@ -68,7 +68,7 @@ adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 Install wallet:
 ```
 COIN=polis
-cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh" && chmod 755 install.sh && bash install.sh
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh)
 ```
 
 ## SmartCash
@@ -81,7 +81,7 @@ adduser smartcash && usermod -aG sudo smartcash && su - smartcash
 
 Install wallet:
 ```
-cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/smartcash/install.sh" && chmod 755 install.sh && bash install.sh
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smartcash/install.sh)
 ```
 
 
@@ -95,5 +95,5 @@ adduser vantaur && usermod -aG sudo vantaur && su - vantaur
 
 Install wallet:
 ```
-cd && wget "https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install.sh" && chmod 755 install.sh && bash install.sh
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install.sh)
 ```

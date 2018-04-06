@@ -13,6 +13,7 @@ MAX=12
 USER=numus
 COINSRC=~/src/numuscore
 COINGITHUB=https://github.com/numuscrypto/numuscore.git
+BLOCKCHAIN=https://github.com/numuscrypto/numuscore/releases/download/1.0.1.3/numus_db_214220.zip
 COINPORT=28121
 COINRPCPORT=28122
 COINDAEMON=numusd
@@ -103,6 +104,7 @@ installDependencies() {
     sudo apt-get install libminiupnpc-dev -qq -y > /dev/null 2>&1
     sudo apt-get install libzmq5 -qq -y > /dev/null 2>&1
     sudo apt-get install virtualenv -qq -y > /dev/null 2>&1
+    sudo apt-get install unzip -qq -y > /dev/null 2>&1
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
@@ -176,19 +178,18 @@ configureWallet() {
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
+downloadBlockchain() {
+    echo
+    echo -e "[10/{$MAX}] Downloading blockchain"
+    cd ~/$COINCORE
+    wget $BLOCKCHAIN > /dev/null 2>&1
+    unzip -o numus_db_214220.zip > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
 startWallet() {
     echo
     echo -e "[11/${MAX}] Starting wallet daemon..."
-    cd ~/$COINCORE
-    sudo rm governance.dat > /dev/null 2>&1
-    sudo rm netfulfilled.dat > /dev/null 2>&1
-    sudo rm peers.dat > /dev/null 2>&1
-    sudo rm -r blocks > /dev/null 2>&1
-    sudo rm mncache.dat > /dev/null 2>&1
-    sudo rm -r chainstate > /dev/null 2>&1
-    sudo rm fee_estimates.dat > /dev/null 2>&1
-    sudo rm mnpayments.dat > /dev/null 2>&1
-    sudo rm banlist.dat > /dev/null 2>&1
     cd
     $COINDAEMON -daemon > /dev/null 2>&1
     sleep 5
@@ -225,6 +226,7 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     compileWallet
     installWallet
     configureWallet
+    downloadBlockchain
     startWallet
 
     echo

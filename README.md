@@ -27,7 +27,22 @@ adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 Install wallet:
 ```
 COIN=bulwark
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
+```
+
+## GoByte
+
+Create user:
+```
+COIN=gobyte
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+adduser $COIN && usermod -aG sudo $COIN && su - $COIN
+```
+
+Install wallet:
+```
+COIN=gobyte
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
 ```
 
 ## Numus
@@ -40,7 +55,7 @@ adduser numus && usermod -aG sudo numus && su - numus
 
 Install wallet:
 ```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/numus/install.sh)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/numus/install)
 ```
 
 ## Omega
@@ -53,7 +68,7 @@ adduser omega && usermod -aG sudo omega && su - omega
 
 Install wallet:
 ```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/omega/install.sh)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/omega/install)
 ```
 
 ## Polis
@@ -68,7 +83,7 @@ adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 Install wallet:
 ```
 COIN=polis
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install.sh)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
 ```
 
 ## SmartCash
@@ -81,7 +96,7 @@ adduser smartcash && usermod -aG sudo smartcash && su - smartcash
 
 Install wallet:
 ```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smartcash/install.sh)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smartcash/install)
 ```
 
 
@@ -95,5 +110,5 @@ adduser vantaur && usermod -aG sudo vantaur && su - vantaur
 
 Install wallet:
 ```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install.sh)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install)
 ```

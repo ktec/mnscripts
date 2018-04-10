@@ -1,4 +1,5 @@
-#/bin/bash
+#!/bin/bash
+
 NONE='\033[00m'
 RED='\033[01;31m'
 GREEN='\033[01;32m'
@@ -10,16 +11,17 @@ BOLD='\033[1m'
 UNDERLINE='\033[4m'
 MAX=12
 
-USER=bulwark
-COINSRC=~/src/bulwark
-COINGITHUB=https://github.com/bulwark-crypto/Bulwark.git
-COINPORT=52543
-COINRPCPORT=52544
-COINDAEMON=bulwarkd
-COINCLI=bulwark-cli
-COINTX=bulwark-tx
-COINCORE=.bulwark
-COINCONFIG=bulwark.conf
+USER=polis
+COINSRC=~/src/polis
+COINGITHUB=https://github.com/polispay/polis.git
+SENTINELGITHUB=https://github.com/polispay/sentinel.git
+COINPORT=24126
+COINRPCPORT=24127
+COINDAEMON=polisd
+COINCLI=polis-cli
+COINTX=polis-tx
+COINCORE=.poliscore
+COINCONFIG=polis.conf
 
 checkForUbuntuVersion() {
    echo "[1/${MAX}] Checking Ubuntu version..."
@@ -106,20 +108,6 @@ installDependencies() {
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
-downloadWallet() {
-    echo
-    echo -e "[7/${MAX}] Downloading wallet. Please wait..."
-
-    # Download and install precompiled binaries
-    mkdir -p $COINSRC && cd $COINSRC
-    wget $COINDOWNLOAD > /dev/null 2>&1
-    tar -xf *.tar.gz > /dev/null 2>&1
-    cd $COINBINPATH
-    mv $COINDAEMON $COINCLI $COINTX $COINSRC > /dev/null 2>&1
-
-    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
-}
-
 compileWallet() {
     echo
     echo -e "[7/${MAX}] Compiling wallet. Please wait..."
@@ -144,7 +132,7 @@ installWallet() {
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd
-    wget https://raw.githubusercontent.com/ktec/mnscripts/master/bulwark/utilities.sh > /dev/null 2>&1
+    wget https://raw.githubusercontent.com/ktec/mnscripts/master/polis/utilities.sh > /dev/null 2>&1
     chmod 755 utilities.sh
     sudo mv utilities.sh /usr/local/bin
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
@@ -153,20 +141,12 @@ installWallet() {
 configureWallet() {
     echo
     echo -e "[9/${MAX}] Configuring wallet. Please wait..."
-    # $COINDAEMON -daemon > /dev/null 2>&1
-    # sleep 10
+    $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 10
 
     mnip=$(curl --silent ipinfo.io/ip)
     rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
-
-    # requires us to create a username/password before we can run the daemon
-    mkdir -p ~/$COINCORE/
-    echo -e "rpcuser=${rpcuser}\nrpcpassword=${rpcpass}\n" > ~/$COINCORE/$COINCONFIG
-    # Now we can run the daemon!
-    $COINDAEMON -daemon > /dev/null 2>&1
-    sleep 10
-
     mnkey=$($COINCLI masternode genkey)
 
     $COINCLI stop > /dev/null 2>&1
@@ -192,22 +172,22 @@ configureWallet() {
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
-configureCrontab() {
+installSentinel() {
     echo
-    echo -e "[10/${MAX}] Configuring crontab. Please wait..."
-
-    (
-      crontab -l 2>/dev/null
-      echo '@reboot sleep 30 && bulwarkd -daemon -shrinkdebugfile'
-    ) | crontab
-    # (
-    #   crontab -l 2>/dev/null
-    #   echo '@reboot sleep 60 && bulwark-cli startmasternode local false'
-    # ) | crontab
-
+    echo -e "[10/${MAX}] Installing Sentinel...${YELLOW}"
+    cd ~/$COINCORE
+    git clone $SENTINELGITHUB sentinel > /dev/null 2>&1
+    cd sentinel
+    export LC_ALL=C > /dev/null 2>&1
+    virtualenv ./venv > /dev/null 2>&1
+    ./venv/bin/pip install -r requirements.txt > /dev/null 2>&1
+    echo  "* * * * * cd ~/${COINCORE}/sentinel && ./venv/bin/python bin/sentinel.py >> ~/sentinel.log 2>&1" >> mycron
+    crontab mycron > /dev/null 2>&1
+    rm mycron > /dev/null 2>&1
+    CONFLOCATION=$(cd ~/$COINCORE && pwd)
+    rpl dash_conf=/home/YOURUSERNAME/$COINCORE/$COINCONFIG dash_conf=$CONFLOCATION/$COINCONFIG sentinel.conf > /dev/null 2>&1
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
-
 
 startWallet() {
     echo
@@ -233,19 +213,19 @@ syncWallet() {
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
     until $COINCLI mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}\xE2\x9C\x94 Blockchain Synced${NONE}";
-    # until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    # echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
-    # until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    # echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
-    # until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    # echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
+    until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
+    until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
+    until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
 }
 
 clear
 cd
 
 echo -e "${BOLD}"
-read -p "This script will setup your Bulwark Coin Masternode. Do you wish to continue? (y/n)?" response
+read -p "This script will setup your polis Coin Masternode. Do you wish to continue? (y/n)?" response
 echo -e "${NONE}"
 
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
@@ -255,11 +235,10 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     installFail2Ban
     installFirewall
     installDependencies
-    # downloadWallet
     compileWallet
     installWallet
     configureWallet
-    configureCrontab
+    installSentinel
     startWallet
     syncWallet
 

@@ -1,4 +1,5 @@
-#/bin/bash
+#!/bin/bash
+
 NONE='\033[00m'
 RED='\033[01;31m'
 GREEN='\033[01;32m'
@@ -10,17 +11,16 @@ BOLD='\033[1m'
 UNDERLINE='\033[4m'
 MAX=12
 
-USER=numus
-COINSRC=~/src/numuscore
-COINGITHUB=https://github.com/numuscrypto/numuscore.git
-BLOCKCHAIN=https://github.com/numuscrypto/numuscore/releases/download/1.0.1.3/numus_db_214220.zip
-COINPORT=28121
-COINRPCPORT=28122
-COINDAEMON=numusd
-COINCLI=numusd
-COINTX=numusd
-COINCORE=.numus
-COINCONFIG=numus.conf
+USER=bulwark
+COINSRC=~/src/bulwark
+COINGITHUB=https://github.com/bulwark-crypto/Bulwark.git
+COINPORT=52543
+COINRPCPORT=52544
+COINDAEMON=bulwarkd
+COINCLI=bulwark-cli
+COINTX=bulwark-tx
+COINCORE=.bulwark
+COINCONFIG=bulwark.conf
 
 checkForUbuntuVersion() {
    echo "[1/${MAX}] Checking Ubuntu version..."
@@ -104,7 +104,20 @@ installDependencies() {
     sudo apt-get install libminiupnpc-dev -qq -y > /dev/null 2>&1
     sudo apt-get install libzmq5 -qq -y > /dev/null 2>&1
     sudo apt-get install virtualenv -qq -y > /dev/null 2>&1
-    sudo apt-get install unzip -qq -y > /dev/null 2>&1
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
+downloadWallet() {
+    echo
+    echo -e "[7/${MAX}] Downloading wallet. Please wait..."
+
+    # Download and install precompiled binaries
+    mkdir -p $COINSRC && cd $COINSRC
+    wget $COINDOWNLOAD > /dev/null 2>&1
+    tar -xf *.tar.gz > /dev/null 2>&1
+    cd $COINBINPATH
+    mv $COINDAEMON $COINCLI $COINTX $COINSRC > /dev/null 2>&1
+
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
@@ -114,8 +127,10 @@ compileWallet() {
 
     # Download and compile from source via git
     git clone $COINGITHUB $COINSRC > /dev/null 2>&1
-    cd $COINSRC/src
-    make -f makefile.unix > /dev/null 2>&1
+    cd $COINSRC
+    ./autogen.sh > /dev/null 2>&1
+    ./configure > /dev/null 2>&1
+    make > /dev/null 2>&1
 
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
@@ -124,13 +139,13 @@ installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
     cd && cd $COINSRC/src
-    strip $COINDAEMON
-    chmod +x $COINDAEMON
-    sudo mv $COINDAEMON /usr/local/bin
+    strip $COINDAEMON $COINCLI $COINTX
+    chmod +x $COINDAEMON $COINCLI $COINTX
+    sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd
-    wget https://raw.githubusercontent.com/ktec/mnscripts/master/numus/utilities.sh > /dev/null 2>&1
+    wget https://raw.githubusercontent.com/ktec/mnscripts/master/bulwark/utilities.sh > /dev/null 2>&1
     chmod 755 utilities.sh
     sudo mv utilities.sh /usr/local/bin
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
@@ -146,7 +161,7 @@ configureWallet() {
     rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 
-    # Numus requires us to create a username/password before we can run the daemon
+    # requires us to create a username/password before we can run the daemon
     mkdir -p ~/$COINCORE/
     echo -e "rpcuser=${rpcuser}\nrpcpassword=${rpcpass}\n" > ~/$COINCORE/$COINCONFIG
     # Now we can run the daemon!
@@ -178,18 +193,36 @@ configureWallet() {
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
-downloadBlockchain() {
+configureCrontab() {
     echo
-    echo -e "[10/{$MAX}] Downloading blockchain"
-    cd ~/$COINCORE
-    wget $BLOCKCHAIN > /dev/null 2>&1
-    unzip -o numus_db_214220.zip > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
+    echo -e "[10/${MAX}] Configuring crontab. Please wait..."
+
+    (
+      crontab -l 2>/dev/null
+      echo '@reboot sleep 30 && bulwarkd -daemon -shrinkdebugfile'
+    ) | crontab
+    # (
+    #   crontab -l 2>/dev/null
+    #   echo '@reboot sleep 60 && bulwark-cli startmasternode local false'
+    # ) | crontab
+
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
+
 
 startWallet() {
     echo
     echo -e "[11/${MAX}] Starting wallet daemon..."
+    cd ~/$COINCORE
+    sudo rm governance.dat > /dev/null 2>&1
+    sudo rm netfulfilled.dat > /dev/null 2>&1
+    sudo rm peers.dat > /dev/null 2>&1
+    sudo rm -r blocks > /dev/null 2>&1
+    sudo rm mncache.dat > /dev/null 2>&1
+    sudo rm -r chainstate > /dev/null 2>&1
+    sudo rm fee_estimates.dat > /dev/null 2>&1
+    sudo rm mnpayments.dat > /dev/null 2>&1
+    sudo rm banlist.dat > /dev/null 2>&1
     cd
     $COINDAEMON -daemon > /dev/null 2>&1
     sleep 5
@@ -201,19 +234,19 @@ syncWallet() {
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
     until $COINCLI mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
     echo -e "${GREEN}\xE2\x9C\x94 Blockchain Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
-    until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
-    echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
+    # until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    # echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
+    # until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    # echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
+    # until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    # echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
 }
 
 clear
 cd
 
 echo -e "${BOLD}"
-read -p "This script will setup your Numus Coin Masternode. Do you wish to continue? (y/n)? " response
+read -p "This script will setup your Bulwark Coin Masternode. Do you wish to continue? (y/n)?" response
 echo -e "${NONE}"
 
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
@@ -223,21 +256,21 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     installFail2Ban
     installFirewall
     installDependencies
+    # downloadWallet
     compileWallet
     installWallet
     configureWallet
-    downloadBlockchain
+    configureCrontab
     startWallet
+    syncWallet
 
     echo
     echo -e "${BOLD}The VPS side of your masternode has been installed. Use the following line in your cold wallet masternode.conf and replace the tx and index${NONE}".
     echo
     echo -e "${CYAN}masternode1 ${mnip}:${COINPORT} ${mnkey} tx index${NONE}"
     echo
-    echo -e "${BOLD}Continue with the cold wallet part of the guide while we sync your masternode${NONE}"
+    echo -e "${BOLD}Continue with the cold wallet part of the guide${NONE}"
     echo
-
-    syncWallet
 else
     echo && echo "Installation cancelled" && echo
 fi

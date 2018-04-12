@@ -60,6 +60,7 @@ configureWallet() {
 
     cd
     $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 10
 
     mnkey=$($COINCLI masternode genkey)
 

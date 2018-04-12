@@ -52,6 +52,15 @@ configureWallet() {
     mnip=$(curl --silent ipinfo.io/ip)
     rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    echo -e "
+    rpcuser=${rpcuser}
+    rpcpassword=${rpcpass}
+    rpcport=${COINRPCPORT}
+    " | sed "s/^[ \t]*//" | sed '/^$/d' > ~/$COINCORE/$COINCONFIG
+
+    cd
+    $COINDAEMON -daemon > /dev/null 2>&1
+
     mnkey=$($COINCLI masternode genkey)
 
     $COINCLI stop > /dev/null 2>&1

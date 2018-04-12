@@ -6,13 +6,13 @@ curl -o bootstrap https://raw.githubusercontent.com/ktec/mnscripts/master/common
 USER=neutron
 COINSRC=~/src/
 COINGITHUB=https://github.com/neutroncoin/neutron.git
-BLOCKCHAIN=
+BLOCKCHAIN=http://ntrn.cryptotools.pw/Neutron_blockchain_latest.zip
 COINPORT=12455
 COINRPCPORT=12454
 COINDAEMON=neutrond
-COINCLI=neutron-cli
-COINTX=neutron-tx
-COINCORE=.neutroncore
+COINCLI=neutrond
+COINTX=neutrond
+COINCORE=.neutron
 COINCONFIG=neutron.conf
 
 compileWallet() {
@@ -21,10 +21,8 @@ compileWallet() {
 
     # Download and compile from source via git
     git clone $COINGITHUB $COINSRC > /dev/null 2>&1
-    cd $COINSRC
-    ./autogen.sh > /dev/null 2>&1
-    ./configure > /dev/null 2>&1
-    make > /dev/null 2>&1
+    cd $COINSRC/src
+    make -f makefile.unix > /dev/null 2>&1
 
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
@@ -33,9 +31,9 @@ installWallet() {
     echo
     echo -e "[8/${MAX}] Installing wallet. Please wait..."
     cd && cd $COINSRC/src
-    strip $COINDAEMON $COINCLI $COINTX
-    chmod +x $COINDAEMON $COINCLI $COINTX
-    sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin
+    strip $COINDAEMON
+    chmod +x $COINDAEMON
+    sudo mv $COINDAEMON /usr/local/bin
 
     #Create sh in /usr/local/bin for getinfo for cli getinfo
     cd
@@ -60,6 +58,7 @@ configureWallet() {
 
     cd
     $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 10
 
     mnkey=$($COINCLI masternode genkey)
 
@@ -84,6 +83,15 @@ configureWallet() {
     # Using sed to remove leading whitespace and blank lines
 
     echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
+downloadBlockchain() {
+    echo
+    echo -e "[10/{$MAX}] Downloading blockchain"
+    cd ~/$COINCORE
+    wget $BLOCKCHAIN > /dev/null 2>&1
+    unzip -o numus_db_214220.zip > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
 startWallet() {
@@ -135,6 +143,7 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     compileWallet
     installWallet
     configureWallet
+    downloadBlockchain
     startWallet
     printWalletInfo
     syncWallet

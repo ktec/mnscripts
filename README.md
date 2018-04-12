@@ -45,6 +45,21 @@ COIN=gobyte
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
 ```
 
+## Neutron
+
+Create user:
+```
+COIN=neutron
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+adduser $COIN && usermod -aG sudo $COIN && su - $COIN
+```
+
+Install wallet:
+```
+COIN=neutron
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
+```
+
 ## Numus
 
 Create user:

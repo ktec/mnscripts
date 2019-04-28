@@ -22,6 +22,7 @@ COINCLI=polis-cli
 COINTX=polis-tx
 COINCORE=.poliscore
 COINCONFIG=polis.conf
+CHAIN=https://polis.party/polis/bootstrap.zip
 
 checkForUbuntuVersion() {
    echo "[1/${MAX}] Checking Ubuntu version..."

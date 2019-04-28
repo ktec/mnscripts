@@ -1,0 +1,144 @@
+#!/bin/bash
+
+curl -o bootstrap https://raw.githubusercontent.com/ktec/mnscripts/master/common/bootstrap
+. bootstrap
+
+USER=safeinsure
+COINSRC=~/src/
+COINGITHUB=https://github.com/SafeInsure/sins-coin.git
+BLOCKCHAIN=
+COINPORT=39105
+COINRPCPORT=39106
+COINDAEMON=safeinsured
+COINCLI=safeinsure-cli
+COINTX=safeinsure-tx
+COINCORE=.safeinsure
+COINCONFIG=safeinsure.conf
+
+compileWallet() {
+    echo
+    echo -e "[7/${MAX}] Compiling wallet. Please wait..."
+
+    # Download and compile from source via git
+    git clone $COINGITHUB $COINSRC > /dev/null 2>&1
+    cd $COINSRC
+    ./autogen.sh > /dev/null 2>&1
+    ./configure > /dev/null 2>&1
+    make > /dev/null 2>&1
+
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
+installWallet() {
+    echo
+    echo -e "[8/${MAX}] Installing wallet. Please wait..."
+    cd && cd $COINSRC/src
+    strip $COINDAEMON $COINCLI $COINTX
+    chmod +x $COINDAEMON $COINCLI $COINTX
+    sudo mv $COINDAEMON $COINCLI $COINTX /usr/local/bin
+
+    #Create sh in /usr/local/bin for getinfo for cli getinfo
+    cd
+    wget https://raw.githubusercontent.com/ktec/mnscripts/master/${USER}/utilities > /dev/null 2>&1
+    chmod 755 utilities
+    sudo mv utilities /usr/local/bin
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
+configureWallet() {
+    echo
+    echo -e "[9/${MAX}] Configuring wallet. Please wait..."
+
+    mnip=$(curl --silent ipinfo.io/ip)
+    rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+    echo -e "
+    rpcuser=${rpcuser}
+    rpcpassword=${rpcpass}
+    rpcport=${COINRPCPORT}
+    " | sed "s/^[ \t]*//" | sed '/^$/d' > ~/$COINCORE/$COINCONFIG
+
+    cd
+    $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 10
+
+    mnkey=$($COINCLI masternode genkey)
+
+    $COINCLI stop > /dev/null 2>&1
+    sleep 10
+
+    echo -e "
+    rpcuser=${rpcuser}
+    rpcpassword=${rpcpass}
+    rpcport=${COINRPCPORT}
+    rpcallowip=127.0.0.1
+    rpcthreads=8
+    listen=1
+    server=1
+    daemon=1
+    staking=0
+    discover=1
+    externalip=${mnip}:${COINPORT}
+    masternode=1
+    masternodeprivkey=${mnkey}
+    " | sed "s/^[ \t]*//" | sed '/^$/d' > ~/$COINCORE/$COINCONFIG
+    # Using sed to remove leading whitespace and blank lines
+
+    echo -e "${NONE}${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
+startWallet() {
+    echo
+    echo -e "[11/${MAX}] Starting wallet daemon..."
+    cd
+    $COINDAEMON -daemon > /dev/null 2>&1
+    sleep 5
+    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
+syncWallet() {
+    echo
+    echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
+    until $COINCLI mnsync status | grep -m 1 '"IsBlockchainSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Blockchain Synced${NONE}";
+    until $COINCLI mnsync status | grep -m 1 '"IsMasternodeListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Masternode List Synced${NONE}";
+    until $COINCLI mnsync status | grep -m 1 '"IsWinnersListSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Winners List Synced${NONE}";
+    until $COINCLI mnsync status | grep -m 1 '"IsSynced": true'; do sleep 1 ; done > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Done reindexing wallet${NONE}";
+}
+
+printWalletInfo(){
+    echo
+    echo -e "${BOLD}The VPS side of your masternode has been installed. Use the following line in your cold wallet masternode.conf and replace the tx and index${NONE}".
+    echo
+    echo -e "${CYAN}mn1 ${mnip}:${COINPORT} ${mnkey} tx index${NONE}"
+    echo
+    echo -e "${BOLD}Continue with the cold wallet part of the guide while we sync your masternode${NONE}"
+    echo
+}
+
+clear
+cd
+
+echo -e "${BOLD}"
+read -p "This script will setup your Numus Coin Masternode. Do you wish to continue [y/N]? " response
+echo -e "${NONE}"
+
+if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+    checkForUbuntuVersion
+    updateAndUpgrade
+    setupSwap
+    installFail2Ban
+    installFirewall
+    installDependencies
+    compileWallet
+    installWallet
+    configureWallet
+    startWallet
+    printWalletInfo
+    syncWallet
+else
+    echo && echo "Installation cancelled" && echo
+fi

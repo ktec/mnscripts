@@ -114,7 +114,6 @@ Install wallet:
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smartcash/install)
 ```
 
-
 ## Vantaur
 
 Create user:
@@ -126,4 +125,17 @@ adduser vantaur && usermod -aG sudo vantaur && su - vantaur
 Install wallet:
 ```
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install)
+```
+
+## SafeInsure 
+
+Create user:
+```
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+adduser safeinsure && usermod -aG sudo safeinsure && su - safeinsure
+```
+
+Install wallet:
+```
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/safeinsure/install)
 ```

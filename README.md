@@ -127,7 +127,7 @@ Install wallet:
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install)
 ```
 
-## SafeInsure 
+## SafeInsure
 
 Create user:
 ```
@@ -138,4 +138,17 @@ adduser safeinsure && usermod -aG sudo safeinsure && su - safeinsure
 Install wallet:
 ```
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/safeinsure/install)
+```
+
+## BlacerCoin
+
+Create user:
+```
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+adduser blacercoin && usermod -aG sudo blacercoin && su - blacercoin
+```
+
+Install wallet:
+```
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/blacercoin/install)
 ```

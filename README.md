@@ -73,19 +73,6 @@ Install wallet:
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/numus/install)
 ```
 
-## Omega
-
-Create user:
-```
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
-adduser omega && usermod -aG sudo omega && su - omega
-```
-
-Install wallet:
-```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/omega/install)
-```
-
 ## Polis
 
 Create user:
@@ -112,19 +99,6 @@ adduser smartcash && usermod -aG sudo smartcash && su - smartcash
 Install wallet:
 ```
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smartcash/install)
-```
-
-## Vantaur
-
-Create user:
-```
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
-adduser vantaur && usermod -aG sudo vantaur && su - vantaur
-```
-
-Install wallet:
-```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/vantaur/install)
 ```
 
 ## SafeInsure

@@ -1,17 +1,7 @@
 # Easy Install
 
-This project aims to automate the process of creating a masternode for many alt coins.
-Simply create a new linux server and run the commands listed below.
-
-
-Sources:
-
-- https://github.com/nihilocoin/nihilo
-- https://github.com/SmartCash/smartnode
-
-
-
-This is work in progress. Pull requests welcome...
+Automate the installation of alt coins.
+Create a new linux server and run the commands listed below.
 
 ----
 

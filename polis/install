@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# Install Polis Coin
+
+
 curl -o bootstrap https://raw.githubusercontent.com/ktec/mnscripts/master/common/bootstrap
 . bootstrap
 
-USER=polis
+USER=polis${1:-''}
 COINSRC=~/src/
 COINGITHUB=https://github.com/polispay/polis.git
 SENTINELGITHUB=https://github.com/polispay/sentinel.git

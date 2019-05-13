@@ -7,8 +7,8 @@ USER=smm
 COINSRC=~/src/
 COINGITHUB=https://github.com/SMMCoreDev/smm_core.git
 BLOCKCHAIN=http://138.68.29.129/.smm.zip
-COINPORT=39105
-COINRPCPORT=39106
+COINPORT=18100
+COINRPCPORT=18101
 COINDAEMON=smmd
 COINCLI=smm-cli
 COINTX=smm-tx
@@ -96,6 +96,15 @@ startWallet() {
     echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
 }
 
+downloadBlockchain() {
+    echo
+    echo -e "[10/{$MAX}] Downloading blockchain"
+    cd ~/$COINCORE
+    wget -O blockchain.zip $BLOCKCHAIN > /dev/null 2>&1
+    unzip -o blockchain.zip > /dev/null 2>&1
+    echo -e "${GREEN}\xE2\x9C\x94 Done${NONE}";
+}
+
 syncWallet() {
     echo
     echo "[12/${MAX}] Waiting for wallet to sync. It will take a while, you can go grab a coffee :)"
@@ -123,7 +132,7 @@ clear
 cd
 
 echo -e "${BOLD}"
-read -p "This script will setup your Numus Coin Masternode. Do you wish to continue [y/N]? " response
+read -p "This script will setup your SMM Coin Masternode. Do you wish to continue [y/N]? " response
 echo -e "${NONE}"
 
 if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
@@ -136,6 +145,7 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     compileWallet
     installWallet
     configureWallet
+    downloadBlockchain
     startWallet
     printWalletInfo
     syncWallet

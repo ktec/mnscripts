@@ -116,16 +116,3 @@ Install wallet:
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/blacercoin/install)
 ```
 
-## SMM
-
-Create user:
-```
-COIN=smm
-adduser $COIN && usermod -aG sudo $COIN && su - $COIN
-```
-
-Install wallet:
-```
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smm/install)
-```
-

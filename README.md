@@ -5,19 +5,28 @@ Create a new linux server and run the commands listed below.
 
 ----
 
+Restrict root login to ssh keys
+
+```
+sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
+```
+
+
+----
+
+
+
 ## Bulwark
 
 Create user:
 ```
 COIN=bulwark
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 ```
 
 Install wallet:
 ```
-COIN=bulwark
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/bulwark/install)
 ```
 
 ## GoByte
@@ -25,14 +34,12 @@ cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/
 Create user:
 ```
 COIN=gobyte
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 ```
 
 Install wallet:
 ```
-COIN=gobyte
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/gobyte/install)
 ```
 
 ## Neutron
@@ -40,21 +47,18 @@ cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/
 Create user:
 ```
 COIN=neutron
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 ```
 
 Install wallet:
 ```
-COIN=neutron
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/neutron/install)
 ```
 
 ## Numus
 
 Create user:
 ```
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser numus && usermod -aG sudo numus && su - numus
 ```
 
@@ -68,21 +72,18 @@ cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/
 Create user:
 ```
 COIN=polis
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser $COIN && usermod -aG sudo $COIN && su - $COIN
 ```
 
 Install wallet:
 ```
-COIN=polis
-cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/$COIN/install)
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/polis/install)
 ```
 
 ## SmartCash
 
 Create user:
 ```
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser smartcash && usermod -aG sudo smartcash && su - smartcash
 ```
 
@@ -95,7 +96,6 @@ cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/
 
 Create user:
 ```
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser safeinsure && usermod -aG sudo safeinsure && su - safeinsure
 ```
 
@@ -108,7 +108,6 @@ cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/
 
 Create user:
 ```
-sed -i 's/PermitRootLogin yes/PermitRootLogin without-password/g' /etc/ssh/sshd_config
 adduser blacercoin && usermod -aG sudo blacercoin && su - blacercoin
 ```
 
@@ -116,3 +115,17 @@ Install wallet:
 ```
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/blacercoin/install)
 ```
+
+## SMM
+
+Create user:
+```
+COIN=smm
+adduser $COIN && usermod -aG sudo $COIN && su - $COIN
+```
+
+Install wallet:
+```
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/smm/install)
+```
+

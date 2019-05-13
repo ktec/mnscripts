@@ -1,4 +1,0 @@
-#!/bin/bash
-
-USER=polis${1:-''}
-echo $USER

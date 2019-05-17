@@ -127,3 +127,16 @@ Install wallet:
 ```
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/ichibacoin/install)
 ```
+
+
+## LightPay
+
+Create user:
+```
+adduser lightpaycoin && usermod -aG sudo lighypaycoin && su - lightpaycoin
+```
+
+Install wallet:
+```
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/lightpaycoin/install)
+```

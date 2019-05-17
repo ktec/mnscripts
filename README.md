@@ -116,3 +116,14 @@ Install wallet:
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/blacercoin/install)
 ```
 
+## IchIbaCoin
+
+Create user:
+```
+adduser ichibacoin && usermod -aG sudo ichibacoin && su - ichibacoin
+```
+
+Install wallet:
+```
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/ichibacoin/install)
+```

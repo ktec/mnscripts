@@ -133,10 +133,24 @@ cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/
 
 Create user:
 ```
-adduser lightpaycoin && usermod -aG sudo lighypaycoin && su - lightpaycoin
+adduser lightpaycoin && usermod -aG sudo lightpaycoin && su - lightpaycoin
 ```
 
 Install wallet:
 ```
 cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/lightpaycoin/install)
+```
+
+
+## GiantPay
+
+Create user:
+```
+COIN=giant
+adduser $COIN && usermod -aG sudo $COIN && su - $COIN
+```
+
+Install wallet:
+```
+cd && bash <(curl -fsSL https://raw.githubusercontent.com/ktec/mnscripts/master/giant/install)
 ```
